@@ -1,8 +1,11 @@
+import { Button, ThemeProvider } from '@mui/material';
+import { lightTheme } from './theme';
+
 function App() {
   return (
-    <div>
-      <h2>Hey!</h2>
-    </div>
+    <ThemeProvider theme={lightTheme}>
+      <Button variant="contained">Click me</Button>
+    </ThemeProvider>
   );
 }
 
