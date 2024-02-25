@@ -1,10 +1,15 @@
-import { Button, ThemeProvider } from '@mui/material';
+import { Box, ThemeProvider } from '@mui/material';
 import { lightTheme } from './theme';
+import Navbar from 'src/components/navigation/Navbar';
+import { Outlet } from 'react-router-dom';
 
 function App() {
   return (
     <ThemeProvider theme={lightTheme}>
-      <Button variant="contained">Click me</Button>
+      <Navbar />
+      <Box padding="4rem">
+        <Outlet />
+      </Box>
     </ThemeProvider>
   );
 }
