@@ -7,6 +7,7 @@ export const lightTheme = createTheme({
     },
     dark: {
       main: '#000',
+      contrastText: '#fff',
     },
     white: {
       main: '#fff',
