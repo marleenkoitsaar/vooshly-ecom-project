@@ -15,6 +15,8 @@ import Typography from '@mui/material/Typography';
 import { Link, NavLink } from 'react-router-dom';
 import { useTheme } from '@mui/material';
 
+import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
+
 interface Props {
   /**
    * Injected by the documentation to work in an iframe.
@@ -26,7 +28,8 @@ interface Props {
 const drawerWidth = 240;
 const navItems = [
   { title: 'About', path: '/about' },
-  { title: 'Products', path: '/products' },
+  { title: 'Collections', path: '/collections' },
+  { title: 'Contact', path: '/contact' },
 ];
 
 const linkStyle: React.CSSProperties = {
@@ -113,7 +116,7 @@ export default function Navbar(props: Props) {
             >
               Login
             </Link>
-            <Typography>Ostukorv</Typography>
+            <ShoppingBagIcon />
           </Box>
         </Toolbar>
       </AppBar>
