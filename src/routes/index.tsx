@@ -1,5 +1,9 @@
 import { createBrowserRouter } from 'react-router-dom';
 import App from 'src/App';
+import Collections from 'src/pages/collections';
+import Products from 'src/pages/products';
+import About from 'src/pages/about';
+import Contact from 'src/pages/contact';
 
 const router = createBrowserRouter([
   {
@@ -7,8 +11,20 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       {
+        path: '/collections',
+        element: <Collections />,
+      },
+      {
+        path: 'collections/:collection_id',
+        element: <Products />,
+      },
+      {
+        path: '/contact',
+        element: <Contact />,
+      },
+      {
         path: '/about',
-        element: <h1>about</h1>,
+        element: <About />,
       },
     ],
   },
