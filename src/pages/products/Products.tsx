@@ -11,12 +11,15 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import Loader from 'src/components/loader';
+import { useCartContext } from 'src/context/cart';
 import { getProducts } from 'src/supabase';
 
 const Products = () => {
   const { collection_id } = useParams<'collection_id'>();
 
   const { state } = useLocation();
+
+  const { dispatch } = useCartContext();
 
   const { data, isLoading } = useQuery({
     queryKey: ['GET_PRODUCTS', collection_id],
@@ -65,7 +68,14 @@ const Products = () => {
                   </Typography>
                 </CardContent>
                 <CardActions>
-                  <Button variant="contained">Add to cart</Button>
+                  <Button
+                    onClick={() =>
+                      dispatch({ type: 'ADD_PRODUCT', payload: product })
+                    }
+                    variant="contained"
+                  >
+                    Add to cart
+                  </Button>
                 </CardActions>
               </Card>
             </Grid>

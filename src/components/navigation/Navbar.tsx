@@ -13,9 +13,10 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { Link, NavLink } from 'react-router-dom';
-import { useTheme } from '@mui/material';
+import { Badge, useTheme } from '@mui/material';
 
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
+import { useCartContext } from 'src/context/cart';
 
 interface Props {
   /**
@@ -45,6 +46,13 @@ export default function Navbar(props: Props) {
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
+
+  const {
+    dispatch,
+    state: { products },
+  } = useCartContext();
+
+  const itemsInCart = Object.keys(products).length;
 
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
@@ -116,7 +124,17 @@ export default function Navbar(props: Props) {
             >
               Login
             </Link>
-            <ShoppingBagIcon />
+            {itemsInCart === 0 ? (
+              <ShoppingBagIcon
+                onClick={() => dispatch({ type: 'TOGGLE_CART_DRAWER' })}
+              />
+            ) : (
+              <Badge badgeContent={itemsInCart} color="primary">
+                <ShoppingBagIcon
+                  onClick={() => dispatch({ type: 'TOGGLE_CART_DRAWER' })}
+                />
+              </Badge>
+            )}
           </Box>
         </Toolbar>
       </AppBar>
