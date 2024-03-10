@@ -9,7 +9,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import Loader from 'src/components/loader';
 import { useCartContext } from 'src/context/cart';
 import { getProducts } from 'src/supabase';
@@ -53,31 +53,44 @@ const Products = () => {
         </Box>
         <Grid container spacing={2}>
           {data?.map((product) => (
-            <Grid xs={12} md={3} item key={product.id.toString()}>
-              <Card key={product.id.toString()} sx={{ maxWidth: 345 }}>
-                <CardMedia sx={{ height: 140 }} image={product.image ?? ''} />
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="div">
-                    {product.title}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {product.description}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {product.price}$
-                  </Typography>
-                </CardContent>
-                <CardActions>
-                  <Button
-                    onClick={() =>
-                      dispatch({ type: 'ADD_PRODUCT', payload: product })
-                    }
-                    variant="contained"
-                  >
-                    Add to cart
-                  </Button>
-                </CardActions>
-              </Card>
+            <Grid xs={12} sm={6} md={4} lg={3} item key={product.id.toString()}>
+              <Link
+                style={{ textDecoration: 'none' }}
+                to={product.id.toString()}
+                state={{ product }}
+              >
+                <Card key={product.id.toString()}>
+                  <CardMedia sx={{ height: 140 }} image={product.image ?? ''} />
+                  <CardContent>
+                    <Typography
+                      sx={{
+                        textOverflow: 'ellipsis',
+                        overflow: 'hidden',
+                        textWrap: 'nowrap',
+                      }}
+                      gutterBottom
+                      variant="body1"
+                    >
+                      {product.title}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {product.price}$
+                    </Typography>
+                  </CardContent>
+                  <CardActions>
+                    <Button
+                      onClick={(event) => {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        dispatch({ type: 'ADD_PRODUCT', payload: product });
+                      }}
+                      variant="contained"
+                    >
+                      Add to cart
+                    </Button>
+                  </CardActions>
+                </Card>
+              </Link>
             </Grid>
           ))}
         </Grid>

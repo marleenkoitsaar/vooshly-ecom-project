@@ -11,13 +11,17 @@ const ADD_PRODUCT = 'ADD_PRODUCT';
 const REMOVE_FROM_CART = 'REMOVE_FROM_CART';
 const TOGGLE_CART_DRAWER = 'TOGGLE_CART_DRAWER';
 const UPDATE_QTY = 'UPDATE_QTY';
+const CLEAR_CART = 'CLEAR_CART';
 
 // types
 type Product = NonNullable<Awaited<ReturnType<typeof getProducts>>>[number] & {
   qty: number | null;
 };
 
-type AddToCartAction = { type: typeof ADD_PRODUCT; payload: Product };
+type AddToCartAction = {
+  type: typeof ADD_PRODUCT;
+  payload: Omit<Product, 'qty'>;
+};
 type RemoveFromCartAction = {
   type: typeof REMOVE_FROM_CART;
   payload: Product['id'];
@@ -25,6 +29,11 @@ type RemoveFromCartAction = {
 type ToggleDrawerAction = {
   type: typeof TOGGLE_CART_DRAWER;
 };
+
+type ClearCartAction = {
+  type: typeof CLEAR_CART;
+};
+
 type UpdateQtyAction = {
   type: typeof UPDATE_QTY;
   payload: {
@@ -36,7 +45,8 @@ type Action =
   | AddToCartAction
   | RemoveFromCartAction
   | ToggleDrawerAction
-  | UpdateQtyAction;
+  | UpdateQtyAction
+  | ClearCartAction;
 
 type Dispatch = (action: Action) => void;
 type State = {
@@ -69,6 +79,7 @@ function cartReducer(state: State, action: Action) {
           },
         };
       }
+
       return {
         ...state,
         products: {
@@ -83,6 +94,7 @@ function cartReducer(state: State, action: Action) {
 
     case REMOVE_FROM_CART: {
       const { [action.payload]: value, ...rest } = state.products;
+
       return {
         ...state,
         products: rest,
@@ -106,6 +118,11 @@ function cartReducer(state: State, action: Action) {
       return {
         ...state,
         drawerOpened: !state.drawerOpened,
+      };
+    case CLEAR_CART:
+      return {
+        ...state,
+        products: {},
       };
     default:
       return state;

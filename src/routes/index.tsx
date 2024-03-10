@@ -4,6 +4,9 @@ import Collections from 'src/pages/collections';
 import Products from 'src/pages/products';
 import About from 'src/pages/about';
 import Contact from 'src/pages/contact';
+import Product from 'src/pages/product';
+import Checkout from 'src/pages/checkout';
+import Login from 'src/pages/login';
 
 const router = createBrowserRouter([
   {
@@ -15,7 +18,7 @@ const router = createBrowserRouter([
         element: <Collections />,
       },
       {
-        path: 'collections/:collection_id',
+        path: '/collections/:collection_id',
         element: <Products />,
       },
       {
@@ -25,6 +28,18 @@ const router = createBrowserRouter([
       {
         path: '/about',
         element: <About />,
+      },
+      {
+        path: '/collections/:collection_id/:product_id',
+        element: <Product />,
+      },
+      {
+        path: '/checkout',
+        element: <Checkout />,
+      },
+      {
+        path: '/login',
+        element: <Login />,
       },
     ],
   },
