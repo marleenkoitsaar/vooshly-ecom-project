@@ -12,7 +12,7 @@ import ListItemText from '@mui/material/ListItemText';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import { Badge, useTheme } from '@mui/material';
 
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
@@ -47,6 +47,9 @@ export default function Navbar(props: Props) {
     setMobileOpen((prevState) => !prevState);
   };
 
+  const location = useLocation();
+  const isCheckout = location.pathname.includes('checkout');
+
   const {
     dispatch,
     state: { products },
@@ -57,18 +60,20 @@ export default function Navbar(props: Props) {
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
       <Typography variant="h6" sx={{ my: 2 }}>
-        MUI
+        Vooshly
       </Typography>
       <Divider />
-      <List>
-        {navItems.map(({ path, title }) => (
-          <ListItem key={path} disablePadding>
-            <ListItemButton sx={{ textAlign: 'center' }}>
-              <ListItemText primary={title} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
+      {isCheckout ? null : (
+        <List>
+          {navItems.map(({ path, title }) => (
+            <ListItem key={path} disablePadding>
+              <ListItemButton sx={{ textAlign: 'center' }}>
+                <ListItemText primary={title} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+      )}
     </Box>
   );
 
@@ -96,34 +101,38 @@ export default function Navbar(props: Props) {
           <Link style={{ color: theme.palette.dark.main, ...linkStyle }} to="/">
             <Typography variant="h5">Vooshly</Typography>
           </Link>
-          <Box
-            justifyContent="flex-end"
-            flex={1}
-            gap={theme.spacing(5)}
-            sx={{ display: { xs: 'none', sm: 'flex' } }}
-          >
-            {navItems.map(({ path, title }) => (
-              <NavLink
-                style={{ color: theme.palette.dark.main, ...linkStyle }}
-                key={path}
-                to={path}
-              >
-                {title}
-              </NavLink>
-            ))}
-          </Box>
+          {isCheckout ? null : (
+            <Box
+              justifyContent="flex-end"
+              flex={1}
+              gap={theme.spacing(5)}
+              sx={{ display: { xs: 'none', sm: 'flex' } }}
+            >
+              {navItems.map(({ path, title }) => (
+                <NavLink
+                  style={{ color: theme.palette.dark.main, ...linkStyle }}
+                  key={path}
+                  to={path}
+                >
+                  {title}
+                </NavLink>
+              ))}
+            </Box>
+          )}
           <Box
             display="flex"
             justifyContent="flex-end"
             flex={1}
             gap={theme.spacing(1)}
           >
-            <Link
-              style={{ color: theme.palette.dark.main, ...linkStyle }}
-              to="/login"
-            >
-              Login
-            </Link>
+            {isCheckout ? null : (
+              <Link
+                style={{ color: theme.palette.dark.main, ...linkStyle }}
+                to="/login"
+              >
+                Login
+              </Link>
+            )}
             {itemsInCart === 0 ? (
               <ShoppingBagIcon
                 onClick={() => dispatch({ type: 'TOGGLE_CART_DRAWER' })}
@@ -144,9 +153,6 @@ export default function Navbar(props: Props) {
           variant="temporary"
           open={mobileOpen}
           onClose={handleDrawerToggle}
-          ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
-          }}
           sx={{
             display: { xs: 'block', sm: 'none' },
             '& .MuiDrawer-paper': {

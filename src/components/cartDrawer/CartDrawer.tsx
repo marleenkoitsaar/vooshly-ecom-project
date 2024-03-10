@@ -10,12 +10,15 @@ import { useCartContext } from 'src/context/cart';
 import EmptyCart from './EmptyCart';
 import CartHeader from './CartHeader';
 import ProductsTable from './ProductsTable';
+import { useNavigate } from 'react-router-dom';
 
 const CartDrawer = () => {
   const {
     state: { drawerOpened, products },
     dispatch,
   } = useCartContext();
+
+  const navigate = useNavigate();
 
   const cartArray = Object.values(products);
   const cartEmpty = cartArray.length === 0;
@@ -55,6 +58,10 @@ const CartDrawer = () => {
             fullWidth
             sx={{
               marginTop: theme.spacing(2),
+            }}
+            onClick={() => {
+              dispatch({ type: 'TOGGLE_CART_DRAWER' });
+              navigate('/checkout');
             }}
           >
             Checkout
