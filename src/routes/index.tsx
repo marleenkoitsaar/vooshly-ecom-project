@@ -7,6 +7,9 @@ import Contact from 'src/pages/contact';
 import Product from 'src/pages/product';
 import Checkout from 'src/pages/checkout';
 import Login from 'src/pages/login';
+import OrderConfirmation from 'src/pages/orderConfirmation';
+
+import { CheckoutProvider } from 'src/context/checkout';
 
 const router = createBrowserRouter([
   {
@@ -35,7 +38,15 @@ const router = createBrowserRouter([
       },
       {
         path: '/checkout',
-        element: <Checkout />,
+        element: (
+          <CheckoutProvider>
+            <Checkout />
+          </CheckoutProvider>
+        ),
+      },
+      {
+        path: 'confirmation/:order_id',
+        element: <OrderConfirmation />,
       },
       {
         path: '/login',

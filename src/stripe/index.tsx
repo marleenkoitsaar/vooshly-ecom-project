@@ -3,6 +3,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import { useEffect, useState } from 'react';
 import CheckoutForm from './CheckoutForm';
 import { useCartContext } from 'src/context/cart';
+import { Alert } from '@mui/material';
 
 // Make sure to call `loadStripe` outside of a component’s render to avoid
 // recreating the `Stripe` object on every render.
@@ -43,7 +44,9 @@ export default function StripePayment() {
     appearance,
   };
 
-  if (!clientSecret) return null;
+  if (!clientSecret) {
+    return <Alert sx={{ marginTop: 5 }}>Failed to load stripe</Alert>;
+  }
 
   return (
     <Elements options={options} stripe={stripePromise}>

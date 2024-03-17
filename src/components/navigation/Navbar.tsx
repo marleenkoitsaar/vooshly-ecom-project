@@ -66,11 +66,22 @@ export default function Navbar(props: Props) {
       {isCheckout ? null : (
         <List>
           {navItems.map(({ path, title }) => (
-            <ListItem key={path} disablePadding>
-              <ListItemButton sx={{ textAlign: 'center' }}>
-                <ListItemText primary={title} />
-              </ListItemButton>
-            </ListItem>
+            <NavLink
+              key={path}
+              style={({ isActive }) => {
+                return {
+                  color: isActive ? theme.palette.primary.main : 'inherit',
+                  ...linkStyle,
+                };
+              }}
+              to={path}
+            >
+              <ListItem key={path} disablePadding>
+                <ListItemButton sx={{ textAlign: 'center' }}>
+                  <ListItemText primary={title} />
+                </ListItemButton>
+              </ListItem>
+            </NavLink>
           ))}
         </List>
       )}
@@ -110,8 +121,13 @@ export default function Navbar(props: Props) {
             >
               {navItems.map(({ path, title }) => (
                 <NavLink
-                  style={{ color: theme.palette.dark.main, ...linkStyle }}
                   key={path}
+                  style={({ isActive }) => {
+                    return {
+                      color: isActive ? theme.palette.primary.main : 'inherit',
+                      ...linkStyle,
+                    };
+                  }}
                   to={path}
                 >
                   {title}

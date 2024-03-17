@@ -1,4 +1,4 @@
-import { Box, ThemeProvider } from '@mui/material';
+import { Box, ThemeProvider, styled } from '@mui/material';
 import { lightTheme } from './theme';
 import Navbar from 'src/components/navigation/Navbar';
 import { Outlet } from 'react-router-dom';
@@ -7,8 +7,15 @@ import CartDrawer from 'src/components/cartDrawer';
 import { CartProvider } from './context/cart';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import AllProducts from 'src/components/allProducts';
+import Footer from 'src/components/footer';
 
 const queryClient = new QueryClient();
+
+const StyledBox = styled(Box)`
+  min-height: calc(100vh - 65px);
+  padding: 4rem;
+`;
 
 function App() {
   return (
@@ -18,9 +25,11 @@ function App() {
           <Navbar />
           <CartDrawer />
           <ToastContainer theme="dark" />
-          <Box padding="4rem">
+          <StyledBox>
+            <AllProducts />
             <Outlet />
-          </Box>
+          </StyledBox>
+          <Footer />
         </CartProvider>
       </ThemeProvider>
     </QueryClientProvider>

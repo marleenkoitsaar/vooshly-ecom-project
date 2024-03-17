@@ -5,10 +5,15 @@ import {
   useElements,
 } from '@stripe/react-stripe-js';
 import { Box, Button } from '@mui/material';
-import { createCustomer, createOrder } from 'src/supabase';
+import {
+  findOrCreateCustomer,
+  createOrder,
+  generateOrderNumber,
+} from 'src/supabase';
 import { useCartContext } from 'src/context/cart';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { useCheckoutContext } from 'src/context/checkout';
 
 export default function CheckoutForm() {
   const stripe = useStripe();
@@ -19,6 +24,8 @@ export default function CheckoutForm() {
     dispatch,
   } = useCartContext();
   const cart = Object.values(products);
+
+  const { state } = useCheckoutContext();
 
   const navigate = useNavigate();
 
@@ -63,30 +70,29 @@ export default function CheckoutForm() {
         payment_method_data: {
           billing_details: {
             address: {
-              city: 'Peetri',
-              country: 'Estonia',
-              postal_code: '75312',
-              state: 'Harjumaa',
-              line1: 'Kopli tee 28',
+              city: state.city,
+              country: state.country,
+              postal_code: state.postalCode,
+              line1: state.address,
             },
-            email: 'customer@gmail.com',
-            name: 'Test customer',
-            phone: '555-555-555',
+            email: state.email,
+            name: `${state.firstName} ${state.lastName}`,
+            phone: state.phone,
           },
         },
         return_url: 'http://localhost:5173/',
         receipt_email: 'info@vooshly.com',
         shipping: {
           address: {
-            city: 'Peetri',
-            country: 'Estonia',
-            postal_code: '75312',
-            state: 'Harjumaa',
-            line1: 'Kopli tee 28',
+            city: state.city,
+            country: state.country,
+            postal_code: state.postalCode,
+            state: state.state,
+            line1: state.address,
           },
-          name: 'Marleen Koitsaar',
+          name: `${state.firstName} ${state.lastName}`,
           carrier: 'Fedex',
-          phone: '555-555-555',
+          phone: state.phone,
         },
       },
     });
@@ -107,10 +113,11 @@ export default function CheckoutForm() {
 
     setIsLoading(false);
 
-    const createCustomerPromise = createCustomer({
-      address: 'Harjumaa, Rae vald, Kopli tee 28-23, Estonia',
-      email: 'test@gmail.com',
-      phone: '555-555-555',
+    console.log('state', state);
+    const createCustomerPromise = findOrCreateCustomer({
+      address: state.address,
+      email: state.email,
+      phone: state.phone,
     });
 
     toast.promise(createCustomerPromise, {
@@ -121,7 +128,9 @@ export default function CheckoutForm() {
 
     const customer = await createCustomerPromise;
 
-    const orderPromise =  createOrder({
+    const orderNumber = await generateOrderNumber();
+
+    const orderPromise = createOrder({
       payment_status: 'paid',
       product_ids: cart.map((product) => product.id),
       total: cart.reduce(
@@ -130,6 +139,7 @@ export default function CheckoutForm() {
       ),
       status: 'fulfilled',
       customer_id: customer.id,
+      number: orderNumber,
     });
 
     toast.promise(orderPromise, {
@@ -138,8 +148,10 @@ export default function CheckoutForm() {
       error: 'Failed 🤯',
     });
 
+    const order = await orderPromise;
+
     dispatch({ type: 'CLEAR_CART' });
-    navigate('/');
+    navigate(`/confirmation/${order.id}`, { state: order.number });
   };
 
   if (!stripe) return;

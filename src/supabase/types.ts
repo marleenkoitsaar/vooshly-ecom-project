@@ -71,30 +71,33 @@ export type Database = {
       orders: {
         Row: {
           created_at: string;
-          customer_id: number | null;
+          customer_id: number;
           id: number;
-          payment_status: string | null;
-          product_ids: Json | null;
-          status: string | null;
-          total: number | null;
+          payment_status: string;
+          product_ids: Json;
+          status: string;
+          total: number;
+          number: string;
         };
         Insert: {
           created_at?: string;
-          customer_id?: number | null;
+          customer_id?: number;
           id?: number;
-          payment_status?: string | null;
-          product_ids?: Json | null;
-          status?: string | null;
-          total?: number | null;
+          payment_status?: string;
+          product_ids?: Json;
+          status?: string;
+          total?: number;
+          number: string;
         };
         Update: {
           created_at?: string;
-          customer_id?: number | null;
+          customer_id?: number;
           id?: number;
-          payment_status?: string | null;
-          product_ids?: Json | null;
-          status?: string | null;
-          total?: number | null;
+          payment_status?: string;
+          product_ids?: Json;
+          status?: string;
+          total?: number;
+          number: string;
         };
         Relationships: [
           {

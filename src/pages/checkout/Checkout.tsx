@@ -12,6 +12,7 @@ import {
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCartContext } from 'src/context/cart';
+import { useCheckoutContext } from 'src/context/checkout';
 import StripePayment from 'src/stripe';
 
 const countries = ['Estonia', 'Latvia', 'Canada', 'Germany'];
@@ -21,6 +22,8 @@ const Checkout = () => {
   const {
     state: { products },
   } = useCartContext();
+
+  const { state, onChange } = useCheckoutContext();
 
   const productsArray = Object.values(products);
   const navigate = useNavigate();
@@ -37,17 +40,23 @@ const Checkout = () => {
 
   return (
     <Grid marginTop={theme.spacing(4)} container>
-      <Grid item xs={7}>
+      <Grid item sm={7}>
         <Typography marginBottom={theme.spacing(2)} variant="h5">
           Checkout
         </Typography>
         <Stack gap={theme.spacing(2)}>
-          <TextField fullWidth label="Email" />
           <TextField
-            defaultValue={countries[0]}
+            value={state.email}
+            onChange={onChange('email')}
+            fullWidth
+            label="Email"
+          />
+          <TextField
             fullWidth
             label="Delivery"
             select
+            value={state.country || countries[0]}
+            onChange={onChange('country')}
           >
             {countries.map((country) => (
               <MenuItem value={country} key={country}>
@@ -56,23 +65,64 @@ const Checkout = () => {
             ))}
           </TextField>
           <Stack gap={theme.spacing(2)} flexDirection="row">
-            <TextField fullWidth label="First name" />
-            <TextField fullWidth label="Last name" />
+            <TextField
+              value={state.firstName}
+              onChange={onChange('firstName')}
+              fullWidth
+              label="First name"
+            />
+            <TextField
+              value={state.lastName}
+              onChange={onChange('lastName')}
+              fullWidth
+              label="Last name"
+            />
           </Stack>
-          <TextField fullWidth label="Address" />
+          <TextField
+            value={state.address}
+            onChange={onChange('address')}
+            fullWidth
+            label="Address"
+          />
+          <TextField
+            value={state.state}
+            onChange={onChange('state')}
+            fullWidth
+            label="State"
+          />
           <Stack gap={theme.spacing(2)} flexDirection="row">
-            <TextField fullWidth label="Postal code" />
-            <TextField fullWidth label="City" />
+            <TextField
+              value={state.postalCode}
+              onChange={onChange('postalCode')}
+              fullWidth
+              label="Postal code"
+            />
+            <TextField
+              value={state.city}
+              onChange={onChange('city')}
+              fullWidth
+              label="City"
+            />
           </Stack>
-          <TextField fullWidth label="Phone" />
+          <TextField
+            value={state.phone}
+            onChange={onChange('phone')}
+            fullWidth
+            label="Phone"
+          />
         </Stack>
         <StripePayment />
       </Grid>
       <Divider
         orientation="vertical"
-        sx={{ height: '100vh', width: 2, margin: '0 1rem' }}
+        sx={{
+          height: '100vh',
+          width: 2,
+          margin: '0 1rem',
+          display: { xs: 'none', sm: 'block' },
+        }}
       />
-      <Grid item xs={4}>
+      <Grid item sm={4}>
         <Box position="sticky" top="65px">
           {productsArray.map((product) => (
             <Stack
@@ -106,7 +156,7 @@ const Checkout = () => {
             flexDirection="row"
           >
             <Typography>Shipping</Typography>
-            <Typography>{total.toFixed(2)}</Typography>
+            <Typography>Free Shipping</Typography>
           </Stack>
           <Stack
             alignItems="center"

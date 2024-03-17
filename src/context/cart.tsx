@@ -20,7 +20,7 @@ type Product = NonNullable<Awaited<ReturnType<typeof getProducts>>>[number] & {
 
 type AddToCartAction = {
   type: typeof ADD_PRODUCT;
-  payload: Omit<Product, 'qty'>;
+  payload: Omit<Product, 'qty'> & { qty?: number };
 };
 type RemoveFromCartAction = {
   type: typeof REMOVE_FROM_CART;
@@ -74,7 +74,10 @@ function cartReducer(state: State, action: Action) {
             ...state.products,
             [product.id]: {
               ...product,
-              qty: product.qty === null ? '' : product.qty + 1,
+              qty:
+                product.qty === null
+                  ? ''
+                  : product.qty + (action.payload.qty ?? 1),
             },
           },
         };
@@ -86,7 +89,7 @@ function cartReducer(state: State, action: Action) {
           ...state.products,
           [action.payload.id]: {
             ...action.payload,
-            qty: 1,
+            qty: action.payload.qty ?? 1,
           },
         },
       };
